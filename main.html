@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Güncellemeler | Yeni Nesil Performans & Güvenlik</title>
+    <!-- Google Fonts + Font Awesome 6 (Pro Icons) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #05070c;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            color: #f0f4ff;
+        }
+
+        /* ========= ARKA PLAN VİDEO (MUSIC.MP4) ========= */
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: brightness(0.4) contrast(1.1) saturate(1.2);
+            transition: filter 0.4s ease;
+        }
+
+        /* Dinamik gradient overlay — daha modern ve atmosferik */
+        .dynamic-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(0, 0, 0, 0.65), rgba(2, 8, 20, 0.85));
+            backdrop-filter: blur(3px);
+            z-index: -1;
+        }
+
+        /* Ana içerik konteyneri */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* ========= BAŞLIK ALANI (BOL ANİMASYON) ========= */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: floatInTitle 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-section h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #FFFFFF, #b4c8ff, #8aabff, #4a6eff);
+            background-size: 300% 300%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: gradientShift 6s ease infinite;
+            text-shadow: 0 0 15px rgba(70, 130, 255, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .new-badge-animated {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(90, 120, 255, 0.18);
+            backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 0.45rem 1.6rem;
+            margin-top: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: pulseRing 2.2s infinite;
+        }
+
+        .new-badge-animated i {
+            font-size: 1.2rem;
+            color: #ffd966;
+        }
+
+        .new-badge-animated span {
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes pulseRing {
+            0% { box-shadow: 0 0 0 0 rgba(100, 150, 255, 0.4); border-color: rgba(255,255,200,0.3);}
+            70% { box-shadow: 0 0 0 10px rgba(100, 150, 255, 0); border-color: rgba(255,255,200,0.6);}
+            100% { box-shadow: 0 0 0 0 rgba(100, 150, 255, 0); border-color: rgba(255,255,200,0.3);}
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: #dfe8ff;
+            max-width: 650px;
+            margin: 1.4rem auto 0;
+            font-weight: 400;
+            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.2);
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            display: inline-block;
+        }
+
+        /* ========= KART GRİDİ (CAM MORFİZM + ANİMASYON) ========= */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 2.2rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        .glass-card {
+            background: rgba(18, 25, 45, 0.55);
+            backdrop-filter: blur(14px);
+            border-radius: 2.5rem;
+            padding: 2rem 1.8rem 2.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transform: translateY(0);
+            animation: cardGlide 0.7s ease-out forwards;
+            opacity: 0;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.7s ease;
+            pointer-events: none;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:nth-child(1) { animation-delay: 0.1s; }
+        .glass-card:nth-child(2) { animation-delay: 0.25s; }
+
+        .glass-card:hover {
+            transform: translateY(-12px) scale(1.01);
+            background: rgba(28, 38, 65, 0.75);
+            border-color: rgba(120, 160, 255, 0.6);
+            box-shadow: 0 32px 45px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-icon-wrapper {
+            font-size: 2.8rem;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(145deg, #90aaff, #4060e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            animation: iconBounce 1s ease 0.3s both;
+        }
+
+        @keyframes iconBounce {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.1);}
+            100% { transform: scale(1); opacity: 1;}
+        }
+
+        .glass-card h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(120deg, #ffffff, #c8d9ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #eef3ff;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid #6c8cff;
+            padding-left: 1rem;
+            font-weight: 400;
+        }
+
+        .feature-list-modern {
+            list-style: none;
+            margin-top: 0.5rem;
+        }
+
+        .feature-list-modern li {
+            margin-bottom: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            background: rgba(255,255,255,0.03);
+            padding: 0.4rem 0.8rem;
+            border-radius: 60px;
+            transition: all 0.2s ease;
+        }
+
+        .feature-list-modern li i {
+            width: 1.6rem;
+            color: #7d9eff;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .feature-list-modern li:hover {
+            background: rgba(100, 140, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        /* Ekstra animasyonlu vurgu satırı (isteğe bağlı şık bölüm) */
+        .trend-line {
+            margin: 3rem auto 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            background: rgba(0,0,0,0.4);
+            width: fit-content;
+            padding: 0.55rem 1.4rem;
+            border-radius: 40px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,155,0.2);
+            animation: fadeSlide 1s ease 0.4s both;
+        }
+
+        .trend-line i {
+            margin-right: 6px;
+            color: gold;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========= DİSCORD BUTONU (ORTA ALT) ========= */
+        .discord-center {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 110;
+            transition: all 0.3s ease;
+        }
+
+        .discord-glow {
+            background: rgba(28, 34, 58, 0.8);
+            backdrop-filter: blur(16px);
+            border-radius: 80px;
+            padding: 12px 32px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            border: 1px solid rgba(114, 137, 218, 0.7);
+            transition: all 0.25s;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+            letter-spacing: 0.3px;
+        }
+
+        .discord-glow i:first-child {
+            font-size: 1.9rem;
+            color: #7289da;
+            transition: transform 0.2s;
+        }
+
+        .discord-glow span {
+            font-size: 1rem;
+        }
+
+        .discord-glow:hover {
+            transform: scale(1.07);
+            background: #5865f2;
+            border-color: #ffffff;
+            box-shadow: 0 12px 28px rgba(88, 101, 242, 0.5);
+        }
+
+        .discord-glow:hover i:first-child {
+            transform: rotate(-5deg) scale(1.05);
+            color: white;
+        }
+
+        /* ========= SES KONTROL (SAĞ ALT ŞIK) ========= */
+        .volume-panel {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 110;
+            background: rgba(12, 18, 30, 0.7);
+            backdrop-filter: blur(16px);
+            border-radius: 70px;
+            padding: 0.55rem 1.3rem 0.55rem 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255,255,245,0.2);
+            transition: backdrop-filter 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+        }
+
+        .volume-panel:hover {
+            background: rgba(22, 32, 55, 0.85);
+            border-color: rgba(150, 180, 255, 0.5);
+        }
+
+        .volume-panel i {
+            font-size: 1.3rem;
+            color: #cddcff;
+            transition: 0.1s;
+        }
+
+        .volume-slider-custom {
+            width: 140px;
+            height: 5px;
+            -webkit-appearance: none;
+            background: rgba(210, 225, 255, 0.3);
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .volume-slider-custom::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px #6080ff;
+            border: none;
+            transition: 0.1s;
+        }
+
+        .volume-slider-custom::-webkit-slider-thumb:hover {
+            background: #8aabff;
+            transform: scale(1.25);
+        }
+
+        .vol-percent {
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #00000055;
+            padding: 4px 10px;
+            border-radius: 40px;
+            min-width: 48px;
+            text-align: center;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========= ANİMASYON KEYFRAMES ========= */
+        @keyframes floatInTitle {
+            0% {
+                opacity: 0;
+                transform: translateY(-40px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes cardGlide {
+            0% {
+                opacity: 0;
+                transform: translateY(45px) rotateX(5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        /* Responsive tasarım + dokunmatik iyileştirmeler */
+        @media (max-width: 780px) {
+            .main-content {
+                padding: 2rem 1.5rem 6rem 1.5rem;
+            }
+            .hero-section h1 {
+                font-size: 3.2rem;
+            }
+            .glass-card h2 {
+                font-size: 1.7rem;
+            }
+            .volume-panel {
+                padding: 0.45rem 1rem;
+                right: 18px;
+                bottom: 22px;
+            }
+            .volume-slider-custom {
+                width: 100px;
+            }
+            .discord-glow {
+                padding: 8px 24px;
+            }
+            .discord-glow i:first-child {
+                font-size: 1.5rem;
+            }
+            .discord-glow span {
+                font-size: 0.85rem;
+            }
+            .feature-list-modern li {
+                font-size: 0.85rem;
+                padding: 0.3rem 0.7rem;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .cards-grid {
+                gap: 1.4rem;
+            }
+            .glass-card {
+                padding: 1.4rem;
+            }
+            .volume-slider-custom {
+                width: 75px;
+            }
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            .hero-description {
+                font-size: 0.9rem;
+            }
+            .new-badge-animated span {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Kaydırma çubuğu ince ve şık */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0f1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4060b0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Arka Plan Video (music.mp4) otomatik başlar, sessiz başlangıç -->
+    <video autoplay loop muted playsinline class="bg-video" id="ambientVideo">
+        <source src="music.mp4" type="video/mp4">
+    </video>
+    <div class="dynamic-overlay"></div>
+
+    <div class="main-content">
+        <!-- HEADER KISMI (Görseldeki gibi güncellemeler ve neler yeni) -->
+        <div class="hero-section">
+            <h1>GÜNCELLEMELER</h1>
+            <div class="new-badge-animated">
+                <i class="fas fa-sparkle"></i>
+                <span>Neler Yeni?</span>
+                <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
+            </div>
+            <div class="hero-description">
+                En son özellikler, güvenlik yamaları ve performans iyileştirmeleri — hepsi burada.
+            </div>
+        </div>
+
+        <!-- İKİ ANA KART (Performans + Güvenlik) -->
+        <div class="cards-grid">
+            <!-- Performans Kartı -->
+            <div class="glass-card">
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h2>Büyük Performans Güncellemesi</h2>
+                <div class="card-desc">
+                    Uygulama başlatma süresi %60 azaltıldı. Animasyonlar daha akıcı, geçişler çok daha hızlı hale getirildi.<br>
+                    Bellek yönetimi tamamen yeniden yazıldı.
+                </div>
+                <ul class="feature-list-modern">
+                    <li><i class="fas fa-tachometer-alt"></i> %60 daha hızlı başlatma</li>
+                    <li><i class="fas fa-film"></i> Gelişmiş animasyon motoru</li>
+                    <li><i class="fas fa-microchip"></i> Yeni bellek yönetimi</li>
+                </ul>
+            </div>
+
+            <!-- Güvenlik Kartı -->
+            <div class="glass-card">
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-shield-haltered"></i>
+                </div>
+                <h2>Güvenlik Yamaları</h2>
+                <div class="card-desc">
+                    Kritik güvenlik açıkları giderildi. Şifreleme algoritmaları güncellendi. Kullanıcı verileri artık çok daha güvenli bir şekilde saklanıyor.
+                </div>
+                <ul class="feature-list-modern">
+                    <li><i class="fas fa-bug"></i> Kritik yama uygulandı</li>
+                    <li><i class="fas fa-lock"></i> AES-256 şifreleme</li>
+                    <li><i class="fas fa-user-check"></i> Gelişmiş oturum yönetimi</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Ekstra dekoratif animasyonlu satır (windows yok, sadece hoş bir vibe) -->
+        <div class="trend-line">
+            <i class="fas fa-circle-info"></i> Yeni nesil altyapı ile tanışın. Sürücü desteği ve güçlü güvenlik duvarı aktif.
+        </div>
+    </div>
+
+    <!-- ORTA ALTT DİSCORD LOGO (Link yönlendirme) -->
+    <div class="discord-center">
+        <a href="https://discord.gg/z4fqfMPauK" target="_blank" rel="noopener noreferrer" class="discord-glow">
+            <i class="fab fa-discord"></i>
+            <span>Discord Sunucusu</span>
+            <i class="fas fa-external-link-alt" style="font-size: 0.7rem; opacity: 0.8;"></i>
+        </a>
+    </div>
+
+    <!-- SAĞ ALT KÖŞE VOLUME AYAR ÇUBUĞU -->
+    <div class="volume-panel" id="volumePanel">
+        <i class="fas fa-volume-mute" id="volumeStatusIcon"></i>
+        <input type="range" id="customVolumeSlider" class="volume-slider-custom" min="0" max="100" value="0" step="1">
+        <span id="volumePercentDisplay" class="vol-percent">0%</span>
+    </div>
+
+    <script>
+        (function() {
+            // Video elementi ve ses yönetimi (music.mp4)
+            const videoElem = document.getElementById('ambientVideo');
+            const volumeSlider = document.getElementById('customVolumeSlider');
+            const volumePercentSpan = document.getElementById('volumePercentDisplay');
+            const volumeIconSpan = document.getElementById('volumeStatusIcon');
+
+            // Video hazırlığı: başlangıçta sessiz + ses 0
+            if (videoElem) {
+                // Tarayıcı otoplay politikası nedeniyle muted=true, volume=0
+                videoElem.muted = true;
+                videoElem.volume = 0.0;
+                volumeSlider.value = 0;
+                volumePercentSpan.innerText = '0%';
+                updateVolumeIcon(0);
+
+                // Video yüklenince tekrar emin ol
+                videoElem.addEventListener('loadedmetadata', () => {
+                    if (videoElem.paused) {
+                        videoElem.play().catch(e => console.log("otoplay kısıtlı, kullanıcı etkileşimiyle ses açılabilir."));
+                    }
+                    videoElem.volume = 0.0;
+                    videoElem.muted = true;
+                });
+
+                // Kullanıcı slider ile ses seviyesini değiştirdiğinde
+                function setVideoVolume(percent) {
+                    let volumeValue = percent / 100;
+                    volumeValue = Math.min(1, Math.max(0, volumeValue));
+                    videoElem.volume = volumeValue;
+                    
+                    // Ses > 0 ise muteda çıkar, ses 0 ise muted isteğe bağlı ama daha iyi deneyim
+                    if (volumeValue > 0) {
+                        videoElem.muted = false;
+                    } else {
+                        // Ses 0 ise videoyu susturmaya gerek yok ama volume 0 olduğu için farketmez
+                        // fakat kullanıcı tekrar ses açabilmesi için muted false tutalım
+                        if (videoElem.muted === true) videoElem.muted = false;
+                    }
+                    
+                    // Güncelleme UI
+                    volumePercentSpan.innerText = Math.round(volumeValue * 100) + '%';
+                    updateVolumeIcon(volumeValue);
+                }
+
+                function updateVolumeIcon(vol) {
+                    if (vol === 0) {
+                        volumeIconSpan.className = 'fas fa-volume-mute';
+                    } else if (vol < 0.4) {
+                        volumeIconSpan.className = 'fas fa-volume-down';
+                    } else {
+                        volumeIconSpan.className = 'fas fa-volume-up';
+                    }
+                }
+
+                // Slider eventi
+                volumeSlider.addEventListener('input', (e) => {
+                    const val = parseInt(e.target.value, 10);
+                    setVideoVolume(val);
+                });
+
+                // Ekstra: Kullanıcı sayfada herhangi bir yere tıklarsa (ilk etkileşim) video başlatılır.
+                const startVideoIfNeeded = () => {
+                    if (videoElem.paused) {
+                        videoElem.play().catch(e => console.log("play engellendi fakat volume kontrolu calisir"));
+                    }
+                    // Aynı zamanda eğer ses kapalıysa ve volume slider ile açılacak, sorunsuz.
+                };
+                document.body.addEventListener('click', startVideoIfNeeded, { once: true });
+                volumeSlider.addEventListener('mousedown', () => {
+                    if (videoElem.paused) videoElem.play().catch(()=>{});
+                });
+                volumeSlider.addEventListener('touchstart', () => {
+                    if (videoElem.paused) videoElem.play().catch(()=>{});
+                });
+
+                // Sync periyodik: Video dış etkenlerden dolayı muted kalırsa düzelt
+                setInterval(() => {
+                    if (videoElem && !isNaN(videoElem.volume)) {
+                        const currentVol = videoElem.volume;
+                        const expectedPercent = Math.round(currentVol * 100);
+                        if (volumeSlider.value != expectedPercent) {
+                            volumeSlider.value = expectedPercent;
+                            volumePercentSpan.innerText = expectedPercent + '%';
+                            updateVolumeIcon(currentVol);
+                        }
+                        if (currentVol > 0 && videoElem.muted === true) {
+                            videoElem.muted = false;
+                        }
+                    }
+                }, 300);
+            } else {
+                console.warn("Video elementi bulunamadı, music.mp4 dosyasını kontrol edin.");
+            }
+        })();
+    </script>
+</body>
+</html>
